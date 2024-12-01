@@ -1,6 +1,9 @@
 package br.com.alura.loja.testes;
 
+import br.com.alura.loja.dao.ProdutoDAO;
+import br.com.alura.loja.modelo.Categoria;
 import br.com.alura.loja.modelo.Produto;
+import br.com.alura.loja.util.JPAUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -10,17 +13,17 @@ import java.math.BigDecimal;
 public class cadastroDeProduto {
 
     public static void main(String[] args) {
-        Produto celular = new Produto();
-        celular.setNome("Xiaomi Readmi");
-        celular.setDescricao("Muito legal");
-        celular.setPreco(new BigDecimal("800"));
+        Produto celular = new Produto("Xiaomi Readmi","Muito legal", new BigDecimal("800"), Categoria.CELULARES);
 
         // Armazenar no DB
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AluraLoja");
-        EntityManager em = factory.createEntityManager();
+//        EntityManager em = factory.createEntityManager();
+
+        EntityManager em = JPAUtil.getEntityManager();
+        ProdutoDAO dao = new ProdutoDAO(em);
 
         em.getTransaction().begin();
-        em.persist(celular);
+        dao.cadastrar(celular);
         em.getTransaction().commit();
         em.close();
 
